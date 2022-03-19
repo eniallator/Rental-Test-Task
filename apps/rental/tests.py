@@ -24,7 +24,8 @@ class TestRental(TestCase):
     def test_previous_reservation(self):
         assert self.reservations[0].previous_reservation is None
         assert all(
-            reservation.previous_reservation == self.reservations[i - 1]
+            # Already doing i - 1, since enumerate goes from the second element.
+            reservation.previous_reservation == self.reservations[i]
             for i, reservation in enumerate(self.reservations[1:])
         )
 
