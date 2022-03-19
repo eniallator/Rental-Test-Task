@@ -1,0 +1,23 @@
+DATABASES = {
+    "default": {
+        "HOST": "127.0.0.1",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "",
+        "USER": "",
+        "PASSWORD": "",
+    }
+}
+
+DEBUG = True
+
+BASE_URL = "http://localhost:8000"
+
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".ngrok.io"]
+
+SECURE_SSL_REDIRECT = False
+
+EMAIL_HOST = "127.0.0.1"
+EMAIL_HOST_USER = ""
+EMAIL_USE_TLS = False
+
+SECRET_KEY = ""
