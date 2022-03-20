@@ -29,8 +29,8 @@ class TestRental(TestCase):
             for i, reservation in enumerate(self.reservations[1:])
         )
 
-    def test_sales_view(self):
-        response = self.client.get(reverse("rental:sales"))
+    def test_reservations_view(self):
+        response = self.client.get(reverse("rental:reservations"))
 
         assert response.status_code == 200
-        assert len(response.context["table_data"]) == 3
+        assert len(response.context["reservations"]) == 3
