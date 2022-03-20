@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reservations</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'rental/css/reservations.css' %}"/>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Reservations</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rental Name</th>
+            <th>ID</th>
+            <th>Checkin</th>
+            <th>Checkout</th>
+            <th>Previous Reservation's ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reservation in reservations %}
+            <tr>
+              <td>{{ reservation.rental.name }}</td>
+              <td>{{ reservation.id }}</td>
+              <td>{{ reservation.checkin }}</td>
+              <td>{{ reservation.checkout }}</td>
+              <td>
+                {% if reservation.previous_reservation %}
+                  {{ reservation.previous_reservation.id }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if page.total > 1 %}
+        <div id="pagination">
+          <div class="previous">
+            {% if page.previous is not None %}
+              <a href="?page={{ page.previous }}">&lt;</a>
+            {% else %}
+              <span>&nbsp;</span>
+            {% endif %}
+          </div>
+          <span>{{ page.current }} / {{ page.total }}</span>
+          <div class="next">
+            {% if page.next is not None %}
+              <a href="?page={{ page.next }}">&gt;</a>
+            {% else %}
+              <span>&nbsp;</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
