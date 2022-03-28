@@ -1,37 +1,30 @@
-from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.db.models import Subquery, OuterRef
+from django.views.generic.list import ListView
 
 from .models import Reservation
 
 
-def reservations(request):
-    reservations = Reservation.objects.all().order_by("id")
+class ReservationListView(ListView):
+    model = Reservation
+    paginate_by = 20
+    template_name = "rental/reservations.html"
 
-    reservations_pages = Paginator(reservations, 20)
+    def get_queryset(self):
+        previous_reservations = (
+            Reservation.objects.filter(
+                rental=OuterRef("rental"), checkin__lt=OuterRef("checkin")
+            )
+            .order_by("-checkin")
+            .values("id")[:1]
+        )
+        return (
+            super()
+            .get_queryset()
+            .order_by("id")
+            .prefetch_related("rental")
+            .annotate(previous_reservation=Subquery(previous_reservations))
+        )
 
-    try:
-        current_page = int(request.GET.get("page", 1))
-    except ValueError:
-        current_page = 1
-    else:
-        current_page = max(1, min(reservations_pages.page_range.stop - 1, current_page))
-
-    reservations_page = reservations_pages.page(current_page)
-
-    return render(
-        request,
-        "rental/reservations.html",
-        {
-            "reservations": reservations_page,
-            "page": {
-                "previous": reservations_page.previous_page_number()
-                if current_page > 1
-                else None,
-                "next": reservations_page.next_page_number()
-                if current_page < reservations_pages.page_range.stop - 1
-                else None,
-                "current": current_page,
-                "total": reservations_pages.num_pages,
-            },
-        },
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

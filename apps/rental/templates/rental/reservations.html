@@ -25,7 +25,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for reservation in reservations %}
+          {% for reservation in object_list %}
             <tr>
               <td>{{ reservation.rental.name }}</td>
               <td>{{ reservation.id }}</td>
@@ -33,7 +33,7 @@
               <td>{{ reservation.checkout }}</td>
               <td>
                 {% if reservation.previous_reservation %}
-                  {{ reservation.previous_reservation.id }}
+                  {{ reservation.previous_reservation }}
                 {% else %}
                   N/A
                 {% endif %}
@@ -42,19 +42,19 @@
           {% endfor %}
         </tbody>
       </table>
-      {% if page.total > 1 %}
+      {% if paginator.num_pages > 1 %}
         <div id="pagination">
           <div class="previous">
-            {% if page.previous is not None %}
-              <a href="?page={{ page.previous }}">&lt;</a>
+            {% if page_obj.number > 1 %}
+              <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
             {% else %}
               <span>&nbsp;</span>
             {% endif %}
           </div>
-          <span>{{ page.current }} / {{ page.total }}</span>
+          <span>{{ page_obj.number }} / {{ paginator.num_pages }}</span>
           <div class="next">
-            {% if page.next is not None %}
-              <a href="?page={{ page.next }}">&gt;</a>
+            {% if page_obj.number < paginator.num_pages %}
+              <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
             {% else %}
               <span>&nbsp;</span>
             {% endif %}
