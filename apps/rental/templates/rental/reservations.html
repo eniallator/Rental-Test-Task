@@ -33,7 +33,7 @@
               <td>{{ reservation.checkout }}</td>
               <td>
                 {% if reservation.previous_reservation %}
-                  {{ reservation.previous_reservation.id }}
+                  {{ reservation.previous_reservation }}
                 {% else %}
                   N/A
                 {% endif %}

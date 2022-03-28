@@ -17,12 +17,3 @@ class Reservation(models.Model):
     checkin = models.DateField(help_text="Date of check in")
     # Checking out may be in the future, so may not be certain which is why it's None
     checkout = models.DateField(help_text="Date of check out", blank=True, null=True)
-
-    @property
-    def previous_reservation(self):
-        previous_reservations = Reservation.objects.filter(
-            rental=self.rental, checkin__lt=self.checkin
-        )
-        if not previous_reservations.exists():
-            return None
-        return previous_reservations.order_by("-checkin").first()
